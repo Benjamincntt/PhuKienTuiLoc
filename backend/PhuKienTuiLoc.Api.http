@@ -1,0 +1,48 @@
+@host = http://localhost:5280
+
+### Categories
+GET {{host}}/api/categories?page=1&pageSize=10
+###
+GET {{host}}/api/categories/1
+###
+GET {{host}}/api/categories/1/products
+###
+POST {{host}}/api/categories
+Content-Type: application/json
+
+{
+  "name": "Danh mục mới",
+  "slug": "danh-muc-moi",
+  "icon": "📦"
+}
+
+### Products
+GET {{host}}/api/products?page=1&pageSize=10
+###
+GET {{host}}/api/products?categoryId=1&isHot=true
+###
+GET {{host}}/api/products/1
+###
+POST {{host}}/api/products
+Content-Type: application/json
+
+{
+  "name": "Sản phẩm mới",
+  "slug": "san-pham-moi",
+  "price": 99000,
+  "imageUrl": "https://example.com/image.jpg",
+  "categoryId": 1,
+  "soldCount": 0,
+  "isHot": false,
+  "isSale": false
+}
+
+### Coupons
+GET {{host}}/api/coupons
+###
+GET {{host}}/api/coupons/1
+
+### News Articles
+GET {{host}}/api/news-articles
+###
+GET {{host}}/api/news-articles/1

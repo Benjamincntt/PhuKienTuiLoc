@@ -1,0 +1,39 @@
+# Build / publish output
+dist-local/
+
+# .NET
+**/bin/
+**/obj/
+**/.vs/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+# Node
+**/node_modules/
+**/dist/
+**/dist-ssr/
+*.local
+
+# Logs & OS
+logs/
+*.log
+.DS_Store
+Thumbs.db
+
+# Secrets (copy appsettings.Development.json.example → appsettings.Development.json)
+backend/appsettings.Development.json
+backend/appsettings.Local.json
+
+# DB backup files (generate locally with scripts/export-db.ps1)
+scripts/db/*.bak
+scripts/db/*.bacpac
+
+# Uploaded images (copy folder manually when moving machines)
+backend/wwwroot/uploads/
+
+# IDE
+.vscode/*
+!.vscode/extensions.json
+.idea/
