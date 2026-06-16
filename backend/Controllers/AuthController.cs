@@ -1,6 +1,7 @@
 using System.Security.Claims;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.RateLimiting;
 using PhuKienTuiLoc.Application.Abstractions.Services;
 using PhuKienTuiLoc.Application.Common.Authorization;
 using PhuKienTuiLoc.Application.DTOs;
@@ -10,10 +11,12 @@ namespace PhuKienTuiLoc.Api.Controllers;
 [ApiController]
 [Route("api/auth")]
 [Produces("application/json")]
+[EnableRateLimiting("general")]
 public class AuthController(IAuthService authService) : ControllerBase
 {
     [HttpPost("login")]
     [AllowAnonymous]
+    [EnableRateLimiting("auth")]
     [ProducesResponseType(typeof(LoginResponseDto), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     public async Task<IActionResult> Login([FromBody] LoginRequestDto request, CancellationToken cancellationToken)
