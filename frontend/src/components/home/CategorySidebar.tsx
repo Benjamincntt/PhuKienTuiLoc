@@ -15,7 +15,7 @@ export function CategorySidebar({ categories, activeSlug, desktopSidebar = true 
 
   return (
     <>
-      <div className={showStrip ? "block" : "lg:hidden"}>
+      <div className={cn("min-w-0", showStrip ? "block" : "lg:hidden")}>
         <p className="mb-2 text-sm font-semibold text-foreground">Danh mục</p>
         <div className="flex gap-2 overflow-x-auto pb-1 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
           <Link

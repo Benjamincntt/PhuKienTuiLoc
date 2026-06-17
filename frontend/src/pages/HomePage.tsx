@@ -44,9 +44,9 @@ export function HomePage() {
 
   return (
     <div className="mx-auto max-w-7xl space-y-8 px-4 py-4 sm:space-y-10 sm:py-6">
-      <div className="grid gap-6 lg:grid-cols-[260px_1fr]">
+      <div className="grid min-w-0 gap-6 lg:grid-cols-[260px_1fr]">
         <CategorySidebar categories={categories} />
-        <div className="space-y-6">
+        <div className="min-w-0 space-y-6">
           <HeroBanner />
           <SaleCountdown />
         </div>

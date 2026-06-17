@@ -6,7 +6,7 @@ export function Footer() {
     <footer className="mt-16 border-t border-border bg-secondary/40">
       <div className="mx-auto grid max-w-7xl gap-8 px-4 py-10 sm:grid-cols-2 sm:py-12 lg:grid-cols-4">
         <div>
-          <Link to="/" className="mb-3 block font-bold text-primary">Phụ Kiện Túi Lọc</Link>
+          <Link to="/" className="mb-3 block font-bold text-primary">AnTea Tổng Kho Túi Lọc - Bao Bì Trà</Link>
           <p className="text-sm text-muted-foreground">
             Chuyên cung cấp túi lọc vải không dệt, giấy, sợi ngô, cotton và phụ kiện pha trà, cà phê.
           </p>
@@ -40,7 +40,7 @@ export function Footer() {
       </div>
       <Separator />
       <p className="px-4 py-4 text-center text-xs text-muted-foreground">
-        © 2026 Phụ Kiện Túi Lọc. All rights reserved.
+        © 2026 AnTea Tổng Kho Túi Lọc - Bao Bì Trà. All rights reserved.
       </p>
     </footer>
   )

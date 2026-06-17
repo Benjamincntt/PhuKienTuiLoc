@@ -34,8 +34,8 @@ function SidebarContent({
   return (
     <>
       <div className="border-b border-white/10 p-5">
-        <p className="font-bold text-primary">Phu Kien Tui Loc</p>
-        <p className="text-xs text-muted-foreground">Quản trị web</p>
+        <p className="font-bold text-primary">AnTea</p>
+        <p className="text-xs text-muted-foreground">Tổng Kho Túi Lọc - Bao Bì Trà</p>
       </div>
       <nav className="flex-1 space-y-1 overflow-y-auto p-4">
         {items.map(({ to, label, icon: Icon }) => (

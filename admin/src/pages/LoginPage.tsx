@@ -37,7 +37,7 @@ export function LoginPage() {
       <Card className="w-full max-w-md border-white/20 bg-white/95 shadow-2xl backdrop-blur-md">
         <CardHeader className="text-center">
           <CardTitle className="text-2xl">Đăng nhập quản trị</CardTitle>
-          <p className="text-sm text-muted-foreground">Phụ Kiện Túi Lọc — Admin Panel</p>
+          <p className="text-sm text-muted-foreground">AnTea Tổng Kho Túi Lọc - Bao Bì Trà — Admin Panel</p>
         </CardHeader>
         <CardContent>
           <form onSubmit={handleSubmit} className="space-y-4">

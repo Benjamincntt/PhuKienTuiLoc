@@ -64,11 +64,11 @@ export function Header() {
         <div className="flex items-center gap-2 py-3 sm:gap-4 sm:py-4">
           <Link to="/" className="flex shrink-0 items-center gap-2">
             <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-primary text-base font-bold text-primary-foreground shadow sm:h-11 sm:w-11 sm:text-lg">
-              PL
+              AT
             </div>
             <div className="hidden min-w-0 sm:block">
-              <p className="truncate text-sm font-bold leading-normal">Phụ Kiện Túi Lọc</p>
-              <p className="hidden text-xs text-muted-foreground sm:block">Chất lượng - Uy tín</p>
+              <p className="truncate text-sm font-bold leading-normal">AnTea</p>
+              <p className="hidden text-xs text-muted-foreground sm:block">Tổng Kho Túi Lọc - Bao Bì Trà</p>
             </div>
           </Link>
 
