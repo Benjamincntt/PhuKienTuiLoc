@@ -9,6 +9,7 @@ public class UnitOfWork(AppDbContext db) : IUnitOfWork
     public ICouponRepository Coupons { get; } = new CouponRepository(db);
     public INewsArticleRepository NewsArticles { get; } = new NewsArticleRepository(db);
     public IAdminUserRepository AdminUsers { get; } = new AdminUserRepository(db);
+    public IOrderRepository Orders { get; } = new OrderRepository(db);
 
     public Task<int> SaveChangesAsync(CancellationToken cancellationToken = default) =>
         db.SaveChangesAsync(cancellationToken);

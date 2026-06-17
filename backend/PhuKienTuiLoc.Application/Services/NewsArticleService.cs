@@ -31,6 +31,7 @@ public class NewsArticleService(IUnitOfWork unitOfWork) : INewsArticleService
         {
             Title = dto.Title,
             Excerpt = dto.Excerpt,
+            Content = dto.Content,
             ImageUrl = dto.ImageUrl,
             PublishedAt = dto.PublishedAt ?? DateTime.UtcNow,
         };
@@ -49,6 +50,7 @@ public class NewsArticleService(IUnitOfWork unitOfWork) : INewsArticleService
 
         article.Title = dto.Title;
         article.Excerpt = dto.Excerpt;
+        article.Content = dto.Content;
         article.ImageUrl = dto.ImageUrl;
         article.PublishedAt = dto.PublishedAt;
 

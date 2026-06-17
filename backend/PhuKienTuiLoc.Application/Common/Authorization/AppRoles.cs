@@ -12,4 +12,6 @@ public static class AppRoles
     public const string ManageCoupons = $"{Admin},{Accountant}";
     public const string ManageNews = $"{Admin},{Employee}";
     public const string UploadImages = $"{Admin},{Employee}";
+    public const string ViewOrders = $"{Admin},{Accountant},{Employee}";
+    public const string ManageOrders = $"{Admin},{Accountant},{Employee}";
 }

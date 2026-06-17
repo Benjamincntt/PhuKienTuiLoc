@@ -1,4 +1,5 @@
 import { ArrowRight, Timer } from "lucide-react"
+import { Link } from "react-router-dom"
 import { Button } from "@/components/ui/button"
 
 export function HeroBanner() {
@@ -15,9 +16,11 @@ export function HeroBanner() {
         <p className="text-sm opacity-90 md:text-base">
           Túi lọc vải không dệt, giấy, sợi ngô, cotton — combo 100 chiếc giá tốt nhất thị trường.
         </p>
-        <Button variant="secondary" className="gap-2 rounded-full font-semibold">
-          Mua ngay
-          <ArrowRight className="h-4 w-4" />
+        <Button asChild variant="secondary" className="gap-2 rounded-full font-semibold">
+          <Link to="/products">
+            Mua ngay
+            <ArrowRight className="h-4 w-4" />
+          </Link>
         </Button>
       </div>
       <div className="pointer-events-none absolute -right-8 -top-8 h-40 w-40 rounded-full bg-white/20 blur-2xl" />

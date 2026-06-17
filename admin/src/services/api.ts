@@ -3,6 +3,7 @@ import type {
   Coupon,
   LoginResponse,
   NewsArticle,
+  Order,
   PagedResult,
   Product,
 } from "@/types"
@@ -70,9 +71,9 @@ export const api = {
   deleteProduct: (id: number) => request<void>(`/products/${id}`, { method: "DELETE" }),
 
   getCoupons: () => paged<Coupon>("/coupons"),
-  createCoupon: (data: Omit<Coupon, "id">) =>
+  createCoupon: (data: Record<string, unknown>) =>
     request<Coupon>("/coupons", { method: "POST", body: JSON.stringify(data) }),
-  updateCoupon: (id: number, data: Omit<Coupon, "id">) =>
+  updateCoupon: (id: number, data: Record<string, unknown>) =>
     request<Coupon>(`/coupons/${id}`, { method: "PUT", body: JSON.stringify(data) }),
   deleteCoupon: (id: number) => request<void>(`/coupons/${id}`, { method: "DELETE" }),
 
@@ -82,6 +83,16 @@ export const api = {
   updateNews: (id: number, data: Record<string, unknown>) =>
     request<NewsArticle>(`/news-articles/${id}`, { method: "PUT", body: JSON.stringify(data) }),
   deleteNews: (id: number) => request<void>(`/news-articles/${id}`, { method: "DELETE" }),
+
+  getOrders: (params?: { status?: string; phone?: string; page?: number }) => {
+    const qs = new URLSearchParams({ pageSize: "50", ...(params as Record<string, string> | undefined) })
+    if (params?.status === "") qs.delete("status")
+    if (params?.phone === "") qs.delete("phone")
+    return request<PagedResult<Order>>(`/orders?${qs}`)
+  },
+  getOrder: (id: number) => request<Order>(`/orders/${id}`),
+  updateOrderStatus: (id: number, status: string) =>
+    request<Order>(`/orders/${id}/status`, { method: "PATCH", body: JSON.stringify({ status }) }),
 
   uploadImage: async (file: File) => {
     const formData = new FormData()

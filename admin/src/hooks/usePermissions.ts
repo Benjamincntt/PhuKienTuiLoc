@@ -4,8 +4,10 @@ import {
   canManageCategories,
   canManageCoupons,
   canManageNews,
+  canManageOrders,
   canManageProducts,
   canUploadImages,
+  canViewOrders,
   ROLE_LABELS,
   type Role,
 } from "@/lib/permissions"
@@ -22,6 +24,8 @@ export function usePermissions() {
     canManageCoupons: canManageCoupons(r),
     canManageNews: canManageNews(r),
     canUploadImages: canUploadImages(r),
+    canViewOrders: canViewOrders(r),
+    canManageOrders: canManageOrders(r),
     canAccessRoute: (path: string) => canAccessRoute(r, path),
   }
 }

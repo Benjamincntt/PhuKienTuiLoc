@@ -12,14 +12,14 @@ import {
   XAxis,
   YAxis,
 } from "recharts"
-import { Flame, Newspaper, Package, Percent, Tags, TrendingUp } from "lucide-react"
+import { Flame, Package, Percent, ShoppingBag, TrendingUp } from "lucide-react"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { useAuth } from "@/contexts/AuthContext"
 import { usePermissions } from "@/hooks/usePermissions"
 import { CHART_THEME, STAT_ACCENT, chartColor, statusColor } from "@/lib/theme"
 import { formatPrice } from "@/lib/utils"
 import { api } from "@/services/api"
-import type { Product } from "@/types"
+import type { Order, Product } from "@/types"
 
 const tooltipStyle = {
   backgroundColor: CHART_THEME.tooltipBg,
@@ -34,6 +34,7 @@ export function DashboardPage() {
   const { username } = useAuth()
   const { roleLabel } = usePermissions()
   const [products, setProducts] = useState<Product[]>([])
+  const [orders, setOrders] = useState<Order[]>([])
   const [stats, setStats] = useState({ products: 0, categories: 0, coupons: 0, news: 0 })
 
   useEffect(() => {
@@ -42,8 +43,10 @@ export function DashboardPage() {
       api.getCategories(),
       api.getCoupons(),
       api.getNews(),
-    ]).then(([p, categories, coupons, news]) => {
+      api.getOrders({ page: 1 }),
+    ]).then(([p, categories, coupons, news, ordersResult]) => {
       setProducts(p)
+      setOrders(ordersResult.items)
       setStats({
         products: p.length,
         categories: categories.length,
@@ -87,11 +90,19 @@ export function DashboardPage() {
 
   const totalSold = useMemo(() => products.reduce((s, p) => s + p.soldCount, 0), [products])
 
+  const orderStats = useMemo(() => ({
+    total: orders.length,
+    pending: orders.filter(o => o.status === "Pending").length,
+    revenue: orders
+      .filter(o => o.status !== "Cancelled")
+      .reduce((s, o) => s + o.totalPrice, 0),
+  }), [orders])
+
   const statCards = [
-    { label: "Sản phẩm", value: stats.products, icon: Package },
-    { label: "Danh mục", value: stats.categories, icon: Tags },
-    { label: "Mã giảm giá", value: stats.coupons, icon: Percent },
-    { label: "Tin tức", value: stats.news, icon: Newspaper },
+    { label: "Đơn hàng", value: orderStats.total, icon: ShoppingBag, sub: `${orderStats.pending} chờ xử lý` },
+    { label: "Doanh thu", value: formatPrice(orderStats.revenue), icon: TrendingUp, sub: "Đơn chưa hủy" },
+    { label: "Sản phẩm", value: stats.products, icon: Package, sub: `${stats.categories} danh mục` },
+    { label: "Mã giảm giá", value: stats.coupons, icon: Percent, sub: `${stats.news} tin tức` },
   ]
 
   return (
@@ -108,7 +119,7 @@ export function DashboardPage() {
       </div>
 
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-        {statCards.map(({ label, value, icon: Icon }, i) => {
+        {statCards.map(({ label, value, icon: Icon, sub }, i) => {
           const accent = STAT_ACCENT[i % STAT_ACCENT.length]
           return (
             <Card key={label} className="border-slate-200/70 bg-white/90 shadow-sm backdrop-blur-sm">
@@ -122,7 +133,8 @@ export function DashboardPage() {
                 </div>
               </CardHeader>
               <CardContent>
-                <p className="text-3xl font-semibold tracking-tight text-slate-800">{value}</p>
+                <p className="text-2xl font-semibold tracking-tight text-slate-800">{value}</p>
+                {sub && <p className="mt-1 text-xs text-slate-400">{sub}</p>}
               </CardContent>
             </Card>
           )

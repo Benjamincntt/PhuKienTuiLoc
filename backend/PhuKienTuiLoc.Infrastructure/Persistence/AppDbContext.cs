@@ -11,6 +11,8 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(op
     public DbSet<Coupon> Coupons => Set<Coupon>();
     public DbSet<NewsArticle> NewsArticles => Set<NewsArticle>();
     public DbSet<AdminUser> AdminUsers => Set<AdminUser>();
+    public DbSet<Order> Orders => Set<Order>();
+    public DbSet<OrderItem> OrderItems => Set<OrderItem>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -54,6 +56,9 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(op
             entity.Property(e => e.Title).HasMaxLength(200).IsRequired();
             entity.Property(e => e.Code).HasMaxLength(50).IsRequired();
             entity.Property(e => e.Description).HasMaxLength(500).IsRequired();
+            entity.Property(e => e.DiscountType).HasMaxLength(20).IsRequired();
+            entity.Property(e => e.DiscountValue).HasPrecision(18, 2);
+            entity.Property(e => e.MinOrderAmount).HasPrecision(18, 2);
         });
 
         modelBuilder.Entity<NewsArticle>(entity =>
@@ -69,6 +74,34 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(op
             entity.Property(e => e.Username).HasMaxLength(100).IsRequired();
             entity.Property(e => e.PasswordHash).HasMaxLength(500).IsRequired();
             entity.Property(e => e.Role).HasMaxLength(50).IsRequired();
+        });
+
+        modelBuilder.Entity<Order>(entity =>
+        {
+            entity.Property(e => e.CustomerName).HasMaxLength(200).IsRequired();
+            entity.Property(e => e.CustomerPhone).HasMaxLength(20).IsRequired();
+            entity.Property(e => e.CustomerAddress).HasMaxLength(500).IsRequired();
+            entity.Property(e => e.Note).HasMaxLength(1000);
+            entity.Property(e => e.CouponCode).HasMaxLength(50);
+            entity.Property(e => e.DiscountAmount).HasPrecision(18, 2);
+            entity.Property(e => e.TotalPrice).HasPrecision(18, 2);
+            entity.Property(e => e.Status).HasMaxLength(50).IsRequired();
+        });
+
+        modelBuilder.Entity<OrderItem>(entity =>
+        {
+            entity.Property(e => e.ProductName).HasMaxLength(500).IsRequired();
+            entity.Property(e => e.Price).HasPrecision(18, 2);
+
+            entity.HasOne(e => e.Order)
+                .WithMany(o => o.Items)
+                .HasForeignKey(e => e.OrderId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            entity.HasOne(e => e.Product)
+                .WithMany()
+                .HasForeignKey(e => e.ProductId)
+                .OnDelete(DeleteBehavior.Restrict);
         });
     }
 }

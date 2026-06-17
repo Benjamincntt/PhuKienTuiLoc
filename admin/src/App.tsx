@@ -5,6 +5,7 @@ import { ProtectedRoute } from "@/components/ProtectedRoute"
 import { RoleRoute } from "@/components/RoleRoute"
 import { LoginPage } from "@/pages/LoginPage"
 import { DashboardPage } from "@/pages/DashboardPage"
+import { OrdersPage } from "@/pages/OrdersPage"
 import { ProductsPage } from "@/pages/ProductsPage"
 import { CategoriesPage } from "@/pages/CategoriesPage"
 import { CouponsPage } from "@/pages/CouponsPage"
@@ -24,6 +25,7 @@ export default function App() {
             }
           >
             <Route path="/" element={<RoleRoute><DashboardPage /></RoleRoute>} />
+            <Route path="/orders" element={<RoleRoute><OrdersPage /></RoleRoute>} />
             <Route path="/products" element={<RoleRoute><ProductsPage /></RoleRoute>} />
             <Route path="/categories" element={<RoleRoute><CategoriesPage /></RoleRoute>} />
             <Route path="/coupons" element={<RoleRoute><CouponsPage /></RoleRoute>} />

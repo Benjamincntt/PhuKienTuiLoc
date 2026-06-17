@@ -38,11 +38,20 @@ export function canViewNews(role: Role) {
   return canManageNews(role)
 }
 
+export function canViewOrders(_role: Role) {
+  return true
+}
+
+export function canManageOrders(_role: Role) {
+  return true
+}
+
 export function canAccessRoute(role: Role, path: string) {
   if (path === "/" || path === "") return true
   if (path.startsWith("/products")) return canViewProducts(role)
   if (path.startsWith("/categories")) return canManageCategories(role)
   if (path.startsWith("/coupons")) return canViewCoupons(role)
   if (path.startsWith("/news")) return canViewNews(role)
+  if (path.startsWith("/orders")) return canViewOrders(role)
   return false
 }

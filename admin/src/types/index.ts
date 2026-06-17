@@ -40,12 +40,43 @@ export interface Coupon {
   title: string
   code: string
   description: string
+  discountType: string
+  discountValue: number
+  minOrderAmount: number
+  maxUses: number | null
+  usedCount: number
+  expiresAt: string | null
+  isActive: boolean
 }
 
 export interface NewsArticle {
   id: number
   title: string
   excerpt: string
+  content: string
   imageUrl: string
   publishedAt: string
+}
+
+export interface OrderItem {
+  id: number
+  productId: number
+  productName: string
+  price: number
+  quantity: number
+  subTotal: number
+}
+
+export interface Order {
+  id: number
+  customerName: string
+  customerPhone: string
+  customerAddress: string
+  note: string
+  couponCode: string
+  discountAmount: number
+  totalPrice: number
+  status: string
+  createdAt: string
+  items: OrderItem[]
 }

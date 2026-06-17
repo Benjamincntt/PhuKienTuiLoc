@@ -39,6 +39,7 @@ export interface NewsArticle {
   id: number
   title: string
   excerpt: string
+  content: string
   imageUrl: string
   publishedAt: string
 }

@@ -8,6 +8,7 @@ import type { Category, Product } from "@/types"
 export function ProductsPage() {
   const [searchParams] = useSearchParams()
   const categorySlug = searchParams.get("category") ?? undefined
+  const searchQuery = searchParams.get("search") ?? undefined
   const [products, setProducts] = useState<Product[]>([])
   const [categories, setCategories] = useState<Category[]>([])
   const [loading, setLoading] = useState(true)
@@ -20,18 +21,16 @@ export function ProductsPage() {
       .then(async (cats) => {
         setCategories(cats)
 
-        if (categorySlug) {
+        if (categorySlug && !searchQuery) {
           const category = cats.find((c) => c.slug === categorySlug)
-          if (category) {
-            return api.getCategoryProducts(category.id)
-          }
+          if (category) return api.getCategoryProducts(category.id)
         }
 
-        return api.getProducts()
+        return api.getProducts({ search: searchQuery })
       })
       .then(setProducts)
       .finally(() => setLoading(false))
-  }, [categorySlug])
+  }, [categorySlug, searchQuery])
 
   const activeCategory = categories.find((c) => c.slug === categorySlug)
 
@@ -39,7 +38,9 @@ export function ProductsPage() {
     <div className="mx-auto max-w-7xl space-y-5 px-4 py-4 sm:space-y-6 sm:py-6">
       <div>
         <h1 className="text-xl font-bold sm:text-2xl">
-          {activeCategory ? activeCategory.name : "Tất cả sản phẩm"}
+          {searchQuery
+            ? `Kết quả tìm kiếm: "${searchQuery}"`
+            : activeCategory ? activeCategory.name : "Tất cả sản phẩm"}
         </h1>
         <p className="text-sm text-muted-foreground">
           {products.length} sản phẩm

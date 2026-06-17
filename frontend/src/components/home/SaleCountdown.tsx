@@ -5,32 +5,29 @@ function pad(n: number) {
   return n.toString().padStart(2, "0")
 }
 
+function getDeadline() {
+  // Deadline: 23:59:59 hôm nay
+  const d = new Date()
+  d.setHours(23, 59, 59, 0)
+  return d
+}
+
+function calcTimeLeft(deadline: Date) {
+  const diff = Math.max(0, deadline.getTime() - Date.now())
+  const hours = Math.floor(diff / 3_600_000)
+  const minutes = Math.floor((diff % 3_600_000) / 60_000)
+  const seconds = Math.floor((diff % 60_000) / 1000)
+  return { hours, minutes, seconds }
+}
+
 export function SaleCountdown() {
-  const [timeLeft, setTimeLeft] = useState({ hours: 20, minutes: 15, seconds: 48 })
+  const [deadline] = useState(getDeadline)
+  const [timeLeft, setTimeLeft] = useState(() => calcTimeLeft(deadline))
 
   useEffect(() => {
-    const timer = setInterval(() => {
-      setTimeLeft((prev) => {
-        let { hours, minutes, seconds } = prev
-        seconds -= 1
-        if (seconds < 0) {
-          seconds = 59
-          minutes -= 1
-        }
-        if (minutes < 0) {
-          minutes = 59
-          hours -= 1
-        }
-        if (hours < 0) {
-          hours = 23
-          minutes = 59
-          seconds = 59
-        }
-        return { hours, minutes, seconds }
-      })
-    }, 1000)
+    const timer = setInterval(() => setTimeLeft(calcTimeLeft(deadline)), 1000)
     return () => clearInterval(timer)
-  }, [])
+  }, [deadline])
 
   return (
     <Card className="border-primary/30 bg-secondary/60">

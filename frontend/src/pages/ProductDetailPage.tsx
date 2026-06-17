@@ -4,6 +4,7 @@ import { ArrowLeft, ShoppingCart } from "lucide-react"
 import { ProductGallery } from "@/components/products/ProductGallery"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
+import { useCart } from "@/contexts/CartContext"
 import { formatPrice } from "@/lib/utils"
 import { api } from "@/services/api"
 import type { Product } from "@/types"
@@ -13,6 +14,7 @@ export function ProductDetailPage() {
   const [product, setProduct] = useState<Product | null>(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState("")
+  const { addToCart } = useCart()
 
   useEffect(() => {
     if (!slug) return
@@ -76,7 +78,7 @@ export function ProductDetailPage() {
             )}
           </div>
 
-          <Button size="lg" className="w-full gap-2 rounded-full sm:w-auto">
+          <Button size="lg" className="w-full gap-2 rounded-full sm:w-auto" onClick={() => addToCart(product)}>
             <ShoppingCart className="h-5 w-5" />
             Thêm vào giỏ
           </Button>

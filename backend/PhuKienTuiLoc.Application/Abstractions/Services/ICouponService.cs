@@ -10,4 +10,5 @@ public interface ICouponService
     Task<CouponDto> CreateAsync(CreateCouponDto dto, CancellationToken cancellationToken = default);
     Task<CouponDto> UpdateAsync(int id, UpdateCouponDto dto, CancellationToken cancellationToken = default);
     Task DeleteAsync(int id, CancellationToken cancellationToken = default);
+    Task<ValidateCouponResultDto> ValidateAsync(ValidateCouponDto dto, CancellationToken cancellationToken = default);
 }

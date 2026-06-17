@@ -29,8 +29,28 @@ public static class EntityMapper
     }
 
     public static CouponDto ToDto(this Coupon coupon) =>
-        new(coupon.Id, coupon.Title, coupon.Code, coupon.Description);
+        new(coupon.Id, coupon.Title, coupon.Code, coupon.Description,
+            coupon.DiscountType, coupon.DiscountValue, coupon.MinOrderAmount,
+            coupon.MaxUses, coupon.UsedCount, coupon.ExpiresAt, coupon.IsActive);
 
     public static NewsArticleDto ToDto(this NewsArticle article) =>
-        new(article.Id, article.Title, article.Excerpt, article.ImageUrl, article.PublishedAt);
+        new(article.Id, article.Title, article.Excerpt, article.Content, article.ImageUrl, article.PublishedAt);
+
+    public static OrderItemDto ToDto(this OrderItem item) =>
+        new(item.Id, item.ProductId, item.ProductName, item.Price, item.Quantity, item.Price * item.Quantity);
+
+    public static OrderDto ToDto(this Order order) =>
+        new(
+            order.Id,
+            order.CustomerName,
+            order.CustomerPhone,
+            order.CustomerAddress,
+            order.Note,
+            order.CouponCode,
+            order.DiscountAmount,
+            order.TotalPrice,
+            order.Status,
+            order.CreatedAt,
+            order.Items.Select(i => i.ToDto()).ToList()
+        );
 }

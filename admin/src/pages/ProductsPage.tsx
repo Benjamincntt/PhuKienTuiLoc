@@ -15,12 +15,24 @@ const empty = {
   imageUrls: [] as string[], categoryId: 1, soldCount: 0, isHot: false, isSale: false,
 }
 
+function toSlug(str: string) {
+  return str
+    .toLowerCase()
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .replace(/đ/g, "d")
+    .replace(/[^a-z0-9\s-]/g, "")
+    .trim()
+    .replace(/\s+/g, "-")
+}
+
 export function ProductsPage() {
   const { canManageProducts, canUploadImages } = usePermissions()
   const [items, setItems] = useState<Product[]>([])
   const [categories, setCategories] = useState<Category[]>([])
   const [form, setForm] = useState(empty)
   const [editId, setEditId] = useState<number | null>(null)
+  const [slugManual, setSlugManual] = useState(false)
 
   const load = () => { api.getProducts().then(setItems); api.getCategories().then(setCategories) }
   useEffect(() => { load() }, [])
@@ -47,6 +59,7 @@ export function ProductsPage() {
     else await api.createProduct(data)
     setForm(empty)
     setEditId(null)
+    setSlugManual(false)
     load()
   }
 
@@ -58,6 +71,7 @@ export function ProductsPage() {
 
   const startEdit = (p: Product) => {
     setEditId(p.id)
+    setSlugManual(true)
     setForm({
       name: p.name, slug: p.slug, price: p.price,
       originalPrice: p.originalPrice ?? "",
@@ -65,6 +79,7 @@ export function ProductsPage() {
       categoryId: p.categoryId, soldCount: p.soldCount,
       isHot: p.isHot, isSale: p.isSale,
     })
+    window.scrollTo({ top: 0, behavior: "smooth" })
   }
 
   return (
@@ -74,8 +89,26 @@ export function ProductsPage() {
         <Card>
           <CardHeader><CardTitle>{editId ? "Sửa" : "Thêm"} sản phẩm</CardTitle></CardHeader>
           <CardContent className="grid gap-4 sm:grid-cols-2">
-            <div><Label>Tên</Label><Input value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} /></div>
-            <div><Label>Slug</Label><Input value={form.slug} onChange={(e) => setForm({ ...form, slug: e.target.value })} /></div>
+            <div>
+              <Label>Tên sản phẩm *</Label>
+              <Input
+                placeholder="VD: Túi lọc trà vải không dệt"
+                value={form.name}
+                onChange={(e) => {
+                  const name = e.target.value
+                  setForm(f => ({ ...f, name, slug: slugManual ? f.slug : toSlug(name) }))
+                }}
+              />
+            </div>
+            <div>
+              <Label>Slug <span className="text-xs text-muted-foreground font-normal">(tự sinh từ tên)</span></Label>
+              <Input
+                placeholder="tui-loc-tra-vai-khong-det"
+                value={form.slug}
+                onChange={(e) => { setSlugManual(true); setForm(f => ({ ...f, slug: e.target.value })) }}
+                className="font-mono text-sm"
+              />
+            </div>
             <div><Label>Giá</Label><Input type="number" value={form.price} onChange={(e) => setForm({ ...form, price: Number(e.target.value) })} /></div>
             <div><Label>Giá gốc</Label><Input type="number" value={form.originalPrice} onChange={(e) => setForm({ ...form, originalPrice: e.target.value })} /></div>
             <ImageGalleryField
@@ -94,7 +127,7 @@ export function ProductsPage() {
             <label className="flex items-center gap-2"><input type="checkbox" checked={form.isSale} onChange={(e) => setForm({ ...form, isSale: e.target.checked })} /> Sale</label>
             <div className="flex gap-2 sm:col-span-2">
               <Button onClick={save}>{editId ? "Cập nhật" : "Thêm"}</Button>
-              {editId && <Button variant="outline" onClick={() => { setEditId(null); setForm(empty) }}>Hủy</Button>}
+              {editId && <Button variant="outline" onClick={() => { setEditId(null); setForm(empty); setSlugManual(false) }}>Hủy</Button>}
             </div>
           </CardContent>
         </Card>

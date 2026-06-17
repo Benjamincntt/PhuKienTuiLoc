@@ -17,6 +17,13 @@ public static class QueryableExtensions
         if (filters.IsSale is bool isSale)
             query = query.Where(p => p.IsSale == isSale);
 
+        if (!string.IsNullOrWhiteSpace(filters.Search))
+        {
+            var search = filters.Search.Trim().ToLower();
+            query = query.Where(p => p.Name.ToLower().Contains(search) ||
+                                     p.Slug.ToLower().Contains(search));
+        }
+
         return query;
     }
 

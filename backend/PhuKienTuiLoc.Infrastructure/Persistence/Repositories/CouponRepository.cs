@@ -17,6 +17,9 @@ public class CouponRepository(AppDbContext db) : ICouponRepository
     public Task<Coupon?> GetByIdAsync(int id, CancellationToken cancellationToken = default) =>
         db.Coupons.FirstOrDefaultAsync(c => c.Id == id, cancellationToken);
 
+    public Task<Coupon?> GetByCodeAsync(string code, CancellationToken cancellationToken = default) =>
+        db.Coupons.FirstOrDefaultAsync(c => c.Code == code.ToUpper(), cancellationToken);
+
     public Task<bool> CodeExistsAsync(string code, int? excludeId = null, CancellationToken cancellationToken = default) =>
         db.Coupons.AnyAsync(c => c.Code == code && (excludeId == null || c.Id != excludeId), cancellationToken);
 

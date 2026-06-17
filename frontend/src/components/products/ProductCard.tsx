@@ -3,6 +3,7 @@ import { ShoppingCart } from "lucide-react"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
+import { useCart } from "@/contexts/CartContext"
 import { formatPrice } from "@/lib/utils"
 import type { Product } from "@/types"
 
@@ -11,6 +12,8 @@ interface ProductCardProps {
 }
 
 export function ProductCard({ product }: ProductCardProps) {
+  const { addToCart } = useCart()
+
   return (
     <Card className="group overflow-hidden transition-shadow hover:shadow-lg">
       <Link to={`/products/${product.slug}`} className="relative block aspect-square overflow-hidden bg-muted">
@@ -41,7 +44,11 @@ export function ProductCard({ product }: ProductCardProps) {
           )}
         </div>
         <p className="text-[11px] text-muted-foreground sm:text-xs">{product.soldCount.toLocaleString()} đã bán</p>
-        <Button className="w-full gap-1.5 rounded-full text-xs sm:gap-2 sm:text-sm" size="sm">
+        <Button
+          className="w-full gap-1.5 rounded-full text-xs sm:gap-2 sm:text-sm"
+          size="sm"
+          onClick={(e) => { e.preventDefault(); addToCart(product) }}
+        >
           <ShoppingCart className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
           Thêm vào giỏ
         </Button>

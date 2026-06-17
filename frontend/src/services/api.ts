@@ -1,5 +1,54 @@
 import type { Category, Coupon, NewsArticle, PagedResult, Product } from "@/types"
 
+export interface CreateOrderItemPayload {
+  productId: number
+  quantity: number
+}
+
+export interface CreateOrderPayload {
+  customerName: string
+  customerPhone: string
+  customerAddress: string
+  note?: string
+  couponCode?: string
+  items: CreateOrderItemPayload[]
+}
+
+export interface ValidateCouponResult {
+  isValid: boolean
+  errorMessage?: string
+  discountAmount: number
+  finalAmount: number
+  coupon?: {
+    id: number
+    title: string
+    code: string
+    discountType: string
+    discountValue: number
+  }
+}
+
+export interface OrderItemResult {
+  id: number
+  productId: number
+  productName: string
+  price: number
+  quantity: number
+  subTotal: number
+}
+
+export interface OrderResult {
+  id: number
+  customerName: string
+  customerPhone: string
+  customerAddress: string
+  note: string
+  totalPrice: number
+  status: string
+  createdAt: string
+  items: OrderItemResult[]
+}
+
 const API_BASE = import.meta.env.VITE_API_URL ?? "/api"
 
 async function fetchJson<T>(path: string): Promise<T> {
@@ -30,7 +79,7 @@ export const api = {
       (r) => r.items
     ),
 
-  getProducts: (params?: { categoryId?: number; isHot?: boolean; isSale?: boolean }) =>
+  getProducts: (params?: { categoryId?: number; isHot?: boolean; isSale?: boolean; search?: string }) =>
     fetchJson<PagedResult<Product>>(`/products${buildQuery({ pageSize: 100, ...params })}`).then(
       (r) => r.items
     ),
@@ -46,4 +95,29 @@ export const api = {
     fetchJson<PagedResult<NewsArticle>>(`/news-articles${buildQuery({ pageSize: 100 })}`).then(
       (r) => r.items
     ),
+
+  getNewsById: (id: number) => fetchJson<NewsArticle>(`/news-articles/${id}`),
+
+  validateCoupon: (code: string, orderAmount: number) =>
+    fetch(`${API_BASE}/coupons/validate`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ code: code.trim().toUpperCase(), orderAmount }),
+    }).then(async (res) => {
+      if (!res.ok) throw new Error(`Lỗi ${res.status}`)
+      return res.json() as Promise<ValidateCouponResult>
+    }),
+
+  createOrder: (payload: CreateOrderPayload) =>
+    fetch(`${API_BASE}/orders`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload),
+    }).then(async (res) => {
+      if (!res.ok) {
+        const text = await res.text()
+        throw new Error(text || `Lỗi ${res.status}`)
+      }
+      return res.json() as Promise<OrderResult>
+    }),
 }

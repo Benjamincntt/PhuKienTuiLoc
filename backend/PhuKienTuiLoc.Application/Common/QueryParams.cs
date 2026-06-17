@@ -12,9 +12,16 @@ public class ProductQuery : PaginationQuery
     public int? CategoryId { get; set; }
     public bool? IsHot { get; set; }
     public bool? IsSale { get; set; }
+    public string? Search { get; set; }
 }
 
 public class CategoryQuery : PaginationQuery
 {
     public string? Slug { get; set; }
+}
+
+public class OrderQuery : PaginationQuery
+{
+    public string? Status { get; set; }
+    public string? Phone { get; set; }
 }

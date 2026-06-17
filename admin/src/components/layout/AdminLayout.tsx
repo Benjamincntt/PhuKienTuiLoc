@@ -1,6 +1,6 @@
 import { useEffect, useState, type CSSProperties } from "react"
 import { Link, Outlet, useLocation } from "react-router-dom"
-import { LayoutDashboard, LogOut, Menu, Newspaper, Package, Percent, Tags, X } from "lucide-react"
+import { LayoutDashboard, LogOut, Menu, Newspaper, Package, Percent, ShoppingBag, Tags, X } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { useAuth } from "@/contexts/AuthContext"
 import { usePermissions } from "@/hooks/usePermissions"
@@ -9,6 +9,7 @@ import { cn } from "@/lib/utils"
 
 const nav = [
   { to: "/", label: "Tổng quan", icon: LayoutDashboard, show: () => true },
+  { to: "/orders", label: "Đơn hàng", icon: ShoppingBag, show: (p: ReturnType<typeof usePermissions>) => p.canViewOrders },
   { to: "/products", label: "Sản phẩm", icon: Package, show: (p: ReturnType<typeof usePermissions>) => p.canManageProducts || p.role === "Accountant" },
   { to: "/categories", label: "Danh mục", icon: Tags, show: (p: ReturnType<typeof usePermissions>) => p.canManageCategories },
   { to: "/coupons", label: "Mã giảm giá", icon: Percent, show: (p: ReturnType<typeof usePermissions>) => p.canManageCoupons },

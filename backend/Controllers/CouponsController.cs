@@ -57,4 +57,13 @@ public class CouponsController(ICouponService couponService) : ControllerBase
         await couponService.DeleteAsync(id, cancellationToken);
         return NoContent();
     }
+
+    /// <summary>Kiểm tra mã giảm giá và tính số tiền được giảm (public — khách gọi)</summary>
+    [HttpPost("validate")]
+    [AllowAnonymous]
+    [ProducesResponseType(typeof(ValidateCouponResultDto), StatusCodes.Status200OK)]
+    public async Task<ActionResult<ValidateCouponResultDto>> Validate(
+        [FromBody] ValidateCouponDto dto,
+        CancellationToken cancellationToken) =>
+        Ok(await couponService.ValidateAsync(dto, cancellationToken));
 }
