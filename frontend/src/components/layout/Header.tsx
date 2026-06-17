@@ -48,7 +48,7 @@ export function Header() {
     <header className="sticky top-0 z-50 border-b border-border bg-background/95 backdrop-blur">
       <div className="bg-primary text-primary-foreground">
         <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-2 text-xs md:text-sm">
-          <p className="truncate font-medium">Thương hiệu túi lọc số 1 Việt Nam</p>
+          <p className="truncate font-medium leading-relaxed">Thương hiệu túi lọc số 1 Việt Nam</p>
           <div className="hidden items-center gap-4 lg:flex">
             {quickLinks.map(({ icon: Icon, label, to }) => (
               <Link key={label} to={to} className="flex items-center gap-1 opacity-90 hover:opacity-100 transition-opacity">
@@ -67,7 +67,7 @@ export function Header() {
               PL
             </div>
             <div className="hidden min-w-0 sm:block">
-              <p className="truncate text-sm font-bold leading-tight">Phụ Kiện Túi Lọc</p>
+              <p className="truncate text-sm font-bold leading-normal">Phụ Kiện Túi Lọc</p>
               <p className="hidden text-xs text-muted-foreground sm:block">Chất lượng - Uy tín</p>
             </div>
           </Link>

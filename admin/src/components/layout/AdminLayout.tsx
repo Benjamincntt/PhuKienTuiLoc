@@ -54,8 +54,8 @@ function SidebarContent({
         ))}
       </nav>
       <div className="border-t border-white/10 p-4">
-        <p className="truncate text-sm font-medium">{username}</p>
-        <p className="mb-3 truncate text-xs text-muted-foreground">{perms.roleLabel}</p>
+        <p className="truncate text-sm font-medium leading-normal">{username}</p>
+        <p className="mb-3 truncate text-xs leading-relaxed text-muted-foreground">{perms.roleLabel}</p>
         <Button variant="outline" size="sm" className="w-full gap-2 bg-white/50" onClick={onLogout}>
           <LogOut className="h-4 w-4" />
           Đăng xuất
@@ -122,8 +122,8 @@ export function AdminLayout() {
             <Menu className="h-5 w-5" />
           </Button>
           <div className="min-w-0 flex-1">
-            <p className="truncate text-sm font-semibold text-slate-800">{currentPage}</p>
-            <p className="truncate text-xs text-slate-500">{username}</p>
+            <p className="truncate text-sm font-semibold leading-normal text-slate-800">{currentPage}</p>
+            <p className="truncate text-xs leading-relaxed text-slate-500">{username}</p>
           </div>
         </header>
 
