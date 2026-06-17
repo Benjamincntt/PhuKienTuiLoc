@@ -5,8 +5,31 @@ import { HeroBanner } from "@/components/home/HeroBanner"
 import { NewsSection } from "@/components/home/NewsSection"
 import { SaleCountdown } from "@/components/home/SaleCountdown"
 import { ProductCard } from "@/components/products/ProductCard"
+import { Seo } from "@/components/seo/Seo"
+import { DEFAULT_OG_IMAGE, SITE_NAME, SITE_URL } from "@/lib/seo"
 import { api } from "@/services/api"
 import type { Category, Coupon, NewsArticle, Product } from "@/types"
+
+const homeJsonLd = [
+  {
+    "@context": "https://schema.org",
+    "@type": "Organization",
+    name: SITE_NAME,
+    url: SITE_URL,
+    logo: DEFAULT_OG_IMAGE,
+  },
+  {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    name: SITE_NAME,
+    url: SITE_URL,
+    potentialAction: {
+      "@type": "SearchAction",
+      target: `${SITE_URL}/products?search={search_term_string}`,
+      "query-input": "required name=search_term_string",
+    },
+  },
+]
 
 export function HomePage() {
   const [categories, setCategories] = useState<Category[]>([])
@@ -44,6 +67,12 @@ export function HomePage() {
 
   return (
     <div className="mx-auto max-w-7xl space-y-8 px-4 py-4 sm:space-y-10 sm:py-6">
+      <Seo
+        title="AnTea - Tổng Kho Túi Lọc Trà, Cà Phê & Bao Bì Trà Giá Sỉ"
+        canonicalPath="/"
+        isHome
+        jsonLd={homeJsonLd}
+      />
       <div className="grid min-w-0 gap-6 lg:grid-cols-[260px_1fr]">
         <CategorySidebar categories={categories} />
         <div className="min-w-0 space-y-6">

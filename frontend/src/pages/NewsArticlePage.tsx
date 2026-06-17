@@ -1,7 +1,9 @@
 import { useEffect, useState } from "react"
 import { useParams, Link } from "react-router-dom"
 import { ArrowLeft, Calendar } from "lucide-react"
+import { Seo } from "@/components/seo/Seo"
 import { Button } from "@/components/ui/button"
+import { absoluteUrl, SITE_NAME } from "@/lib/seo"
 import { api } from "@/services/api"
 import type { NewsArticle } from "@/types"
 
@@ -50,9 +52,27 @@ export function NewsArticlePage() {
   }
 
   const body = article.content || article.excerpt
+  const articleJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    headline: article.title,
+    image: article.imageUrl ? [absoluteUrl(article.imageUrl)] : undefined,
+    datePublished: article.publishedAt,
+    description: article.excerpt,
+    author: { "@type": "Organization", name: SITE_NAME },
+    publisher: { "@type": "Organization", name: SITE_NAME },
+  }
 
   return (
     <div className="mx-auto max-w-3xl px-4 py-8 sm:py-12">
+      <Seo
+        title={article.title}
+        description={article.excerpt}
+        canonicalPath={`/news/${article.id}`}
+        image={article.imageUrl}
+        type="article"
+        jsonLd={articleJsonLd}
+      />
       <Button asChild variant="ghost" size="sm" className="mb-6 -ml-2 gap-1.5 rounded-full">
         <Link to="/">
           <ArrowLeft className="h-4 w-4" />

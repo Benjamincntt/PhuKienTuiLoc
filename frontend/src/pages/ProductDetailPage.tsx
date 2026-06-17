@@ -2,9 +2,11 @@ import { useEffect, useState } from "react"
 import { Link, useParams } from "react-router-dom"
 import { ArrowLeft, ShoppingCart } from "lucide-react"
 import { ProductGallery } from "@/components/products/ProductGallery"
+import { Seo } from "@/components/seo/Seo"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { useCart } from "@/contexts/CartContext"
+import { absoluteUrl, SITE_NAME, SITE_URL } from "@/lib/seo"
 import { formatPrice } from "@/lib/utils"
 import { api } from "@/services/api"
 import type { Product } from "@/types"
@@ -46,8 +48,36 @@ export function ProductDetailPage() {
       ? [product.imageUrl]
       : []
 
+  const productDescription = `${product.name} - ${product.categoryName} chính hãng tại ${SITE_NAME}. Giá ${formatPrice(product.price)}, chất lượng cao, giao nhanh toàn quốc.`
+  const productJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "Product",
+    name: product.name,
+    image: images.map((img) => absoluteUrl(img)),
+    description: productDescription,
+    sku: String(product.id),
+    category: product.categoryName,
+    brand: { "@type": "Brand", name: "AnTea" },
+    offers: {
+      "@type": "Offer",
+      url: `${SITE_URL}/products/${product.slug}`,
+      priceCurrency: "VND",
+      price: product.price,
+      availability: "https://schema.org/InStock",
+      itemCondition: "https://schema.org/NewCondition",
+    },
+  }
+
   return (
     <div className="mx-auto max-w-7xl space-y-5 px-4 py-4 sm:space-y-6 sm:py-6">
+      <Seo
+        title={product.name}
+        description={productDescription}
+        canonicalPath={`/products/${product.slug}`}
+        image={images[0]}
+        type="product"
+        jsonLd={productJsonLd}
+      />
       <Button asChild variant="ghost" size="sm" className="gap-2">
         <Link to="/products">
           <ArrowLeft className="h-4 w-4" />

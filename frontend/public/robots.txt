@@ -1,0 +1,5 @@
+User-agent: *
+Allow: /
+Disallow: /admin-panel/
+
+Sitemap: https://baobiantea.com/api/sitemap.xml
