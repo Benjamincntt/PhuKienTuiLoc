@@ -14,7 +14,7 @@
 
       "launchUrl": "swagger",
 
-      "applicationUrl": "http://localhost:5280",
+      "applicationUrl": "http://0.0.0.0:5280",
 
       "environmentVariables": {
 

@@ -11,6 +11,18 @@ public class Order
     public decimal DiscountAmount { get; set; }
     public decimal TotalPrice { get; set; }
     public string Status { get; set; } = OrderStatus.Pending;
+
+    public int? CustomerId { get; set; }
+    public Customer? Customer { get; set; }
+
+    /// <summary>COD | VNPAY | MOMO</summary>
+    public string PaymentMethod { get; set; } = PaymentMethods.Cod;
+    /// <summary>Unpaid | Paid | Failed</summary>
+    public string PaymentStatus { get; set; } = PaymentStatuses.Unpaid;
+    /// <summary>Mã giao dịch trả về từ cổng thanh toán.</summary>
+    public string PaymentRef { get; set; } = string.Empty;
+    public int PointsEarned { get; set; }
+
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
     public ICollection<OrderItem> Items { get; set; } = [];
 }

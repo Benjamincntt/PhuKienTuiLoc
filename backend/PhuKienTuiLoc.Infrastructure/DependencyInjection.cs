@@ -6,9 +6,12 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 using PhuKienTuiLoc.Application.Abstractions.Persistence;
 using PhuKienTuiLoc.Application.Abstractions.Services;
+using PhuKienTuiLoc.Application.Configuration;
 using PhuKienTuiLoc.Infrastructure.Auth;
 using PhuKienTuiLoc.Infrastructure.Configuration;
 using PhuKienTuiLoc.Infrastructure.Files;
+using PhuKienTuiLoc.Infrastructure.Notifications;
+using PhuKienTuiLoc.Infrastructure.Payments;
 using PhuKienTuiLoc.Infrastructure.Persistence;
 using PhuKienTuiLoc.Infrastructure.Persistence.Repositories;
 using PhuKienTuiLoc.Infrastructure.Seeders;
@@ -22,12 +25,23 @@ public static class DependencyInjection
         services.Configure<JwtSettings>(configuration.GetSection("Jwt"));
         services.Configure<AdminSeedSettings>(configuration.GetSection("Admin"));
         services.Configure<UploadSettings>(configuration.GetSection("Upload"));
+        services.Configure<GoogleAuthSettings>(configuration.GetSection("Google"));
+        services.Configure<SiteSettings>(configuration.GetSection("Site"));
+        services.Configure<VnPaySettings>(configuration.GetSection("VnPay"));
+        services.Configure<MomoSettings>(configuration.GetSection("Momo"));
+        services.Configure<PaymentFeatureSettings>(configuration.GetSection("Payments"));
+        services.Configure<OrderNotificationSettings>(configuration.GetSection("OrderNotification"));
+        services.Configure<SmtpSettings>(configuration.GetSection("Smtp"));
 
         services.AddDbContext<AppDbContext>(options =>
             options.UseSqlServer(configuration.GetConnectionString("DefaultConnection")));
 
+        services.AddHttpClient();
         services.AddScoped<IUnitOfWork, UnitOfWork>();
         services.AddScoped<IAuthService, AuthService>();
+        services.AddScoped<ICustomerAuthService, CustomerAuthService>();
+        services.AddScoped<IPaymentService, PaymentService>();
+        services.AddScoped<IOrderNotificationService, OrderEmailNotificationService>();
         services.AddScoped<IFileStorageService, FileStorageService>();
 
         var jwtSettings = configuration.GetSection("Jwt").Get<JwtSettings>()

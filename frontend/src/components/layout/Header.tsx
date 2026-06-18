@@ -16,6 +16,7 @@ import {
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { useCart } from "@/contexts/CartContext"
+import { useAuth } from "@/contexts/AuthContext"
 import { cn } from "@/lib/utils"
 
 const quickLinks = [
@@ -36,6 +37,7 @@ export function Header() {
   const [menuOpen, setMenuOpen] = useState(false)
   const [searchQuery, setSearchQuery] = useState("")
   const { totalCount, openCart } = useCart()
+  const { isAuthenticated, customer } = useAuth()
   const navigate = useNavigate()
 
   function handleSearch(e: React.FormEvent) {
@@ -92,8 +94,19 @@ export function Header() {
             >
               {menuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
             </Button>
-            <Button variant="ghost" size="icon" className="hidden sm:inline-flex" title="Tài khoản (sắp ra mắt)" disabled>
-              <User className="h-5 w-5" />
+            <Button
+              asChild
+              variant="ghost"
+              size="sm"
+              className="hidden gap-2 sm:inline-flex"
+              title={isAuthenticated ? "Tài khoản của tôi" : "Đăng nhập"}
+            >
+              <Link to={isAuthenticated ? "/tai-khoan/don-hang" : "/tai-khoan"}>
+                <User className="h-5 w-5" />
+                <span className="hidden max-w-[120px] truncate lg:inline">
+                  {isAuthenticated ? customer?.fullName : "Đăng nhập"}
+                </span>
+              </Link>
             </Button>
             <Button variant="secondary" size="sm" className="relative gap-2 rounded-full sm:h-10 sm:px-4" onClick={openCart}>
               <ShoppingCart className="h-4 w-4" />
@@ -134,6 +147,14 @@ export function Header() {
                 {label}
               </Link>
             ))}
+            <Link
+              to={isAuthenticated ? "/tai-khoan/don-hang" : "/tai-khoan"}
+              onClick={() => setMenuOpen(false)}
+              className="flex items-center gap-2 rounded-lg px-3 py-2.5 text-sm font-medium hover:bg-muted"
+            >
+              <User className="h-4 w-4" />
+              {isAuthenticated ? customer?.fullName ?? "Tài khoản của tôi" : "Đăng nhập / Đăng ký"}
+            </Link>
           </div>
         </nav>
 

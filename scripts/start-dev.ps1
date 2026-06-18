@@ -24,8 +24,17 @@ Start-Sleep -Seconds 2
 Start-Process powershell -ArgumentList "-NoExit", "-Command", "cd '$root\frontend'; Write-Host 'CUA HANG - http://localhost:5173' -ForegroundColor Green; npm.cmd run dev"
 Start-Process powershell -ArgumentList "-NoExit", "-Command", "cd '$root\admin'; Write-Host 'ADMIN - http://localhost:5174' -ForegroundColor Green; npm.cmd run dev"
 
+$lanIp = (Get-NetIPAddress -AddressFamily IPv4 |
+    Where-Object { $_.IPAddress -like "192.168.*" -and $_.PrefixOrigin -ne "WellKnown" } |
+    Select-Object -First 1).IPAddress
+
 Write-Host "`nDa mo 3 cua so PowerShell." -ForegroundColor Green
 Write-Host "  Backend:  http://localhost:5280/swagger"
 Write-Host "  Cua hang: http://localhost:5173"
 Write-Host "  Admin:    http://localhost:5174  (admin / Admin@123)"
-Write-Host "`nDoi backend hien 'Now listening on: http://localhost:5280' roi mo trinh duyet." -ForegroundColor Yellow
+if ($lanIp) {
+    Write-Host "`n  Mobile (cung WiFi): http://${lanIp}:5173" -ForegroundColor Cyan
+}
+Write-Host "`nNeu mobile khong mo duoc trang, chay script firewall (Admin):" -ForegroundColor Yellow
+Write-Host "  powershell -ExecutionPolicy Bypass -File '$root\scripts\open-dev-firewall.ps1'"
+Write-Host "`nDoi backend hien 'Now listening on: http://0.0.0.0:5280' roi mo trinh duyet." -ForegroundColor Yellow

@@ -13,6 +13,7 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(op
     public DbSet<AdminUser> AdminUsers => Set<AdminUser>();
     public DbSet<Order> Orders => Set<Order>();
     public DbSet<OrderItem> OrderItems => Set<OrderItem>();
+    public DbSet<Customer> Customers => Set<Customer>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -86,6 +87,26 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(op
             entity.Property(e => e.DiscountAmount).HasPrecision(18, 2);
             entity.Property(e => e.TotalPrice).HasPrecision(18, 2);
             entity.Property(e => e.Status).HasMaxLength(50).IsRequired();
+            entity.Property(e => e.PaymentMethod).HasMaxLength(20).IsRequired();
+            entity.Property(e => e.PaymentStatus).HasMaxLength(20).IsRequired();
+            entity.Property(e => e.PaymentRef).HasMaxLength(200);
+
+            entity.HasOne(e => e.Customer)
+                .WithMany(c => c.Orders)
+                .HasForeignKey(e => e.CustomerId)
+                .OnDelete(DeleteBehavior.SetNull);
+        });
+
+        modelBuilder.Entity<Customer>(entity =>
+        {
+            entity.Property(e => e.FullName).HasMaxLength(200).IsRequired();
+            entity.Property(e => e.Email).HasMaxLength(200);
+            entity.Property(e => e.Phone).HasMaxLength(20);
+            entity.Property(e => e.PasswordHash).HasMaxLength(500);
+            entity.Property(e => e.GoogleId).HasMaxLength(100);
+            entity.HasIndex(e => e.Email).IsUnique().HasFilter("[Email] IS NOT NULL");
+            entity.HasIndex(e => e.Phone).IsUnique().HasFilter("[Phone] IS NOT NULL");
+            entity.HasIndex(e => e.GoogleId).HasFilter("[GoogleId] IS NOT NULL");
         });
 
         modelBuilder.Entity<OrderItem>(entity =>

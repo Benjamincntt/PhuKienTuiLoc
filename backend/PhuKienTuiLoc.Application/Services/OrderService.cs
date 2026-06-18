@@ -1,15 +1,23 @@
+using Microsoft.Extensions.Options;
 using PhuKienTuiLoc.Application.Abstractions.Persistence;
 using PhuKienTuiLoc.Application.Abstractions.Services;
 using PhuKienTuiLoc.Application.Common;
 using PhuKienTuiLoc.Application.DTOs;
 using PhuKienTuiLoc.Application.Mappings;
+using PhuKienTuiLoc.Application.Configuration;
 using PhuKienTuiLoc.Domain.Entities;
 using PhuKienTuiLoc.Domain.Exceptions;
 
 namespace PhuKienTuiLoc.Application.Services;
 
-public class OrderService(IUnitOfWork unitOfWork) : IOrderService
+public class OrderService(
+    IUnitOfWork unitOfWork,
+    IPaymentService paymentService,
+    IOrderNotificationService orderNotificationService,
+    IOptions<PaymentFeatureSettings> paymentFeatureOptions) : IOrderService
 {
+    private readonly PaymentFeatureSettings _payments = paymentFeatureOptions.Value;
+
     public async Task<PagedResult<OrderDto>> GetAllAsync(OrderQuery query, CancellationToken cancellationToken = default)
     {
         var result = await unitOfWork.Orders.GetPagedAsync(query, cancellationToken);
@@ -29,10 +37,16 @@ public class OrderService(IUnitOfWork unitOfWork) : IOrderService
         return order.ToDto();
     }
 
-    public async Task<OrderDto> CreateAsync(CreateOrderDto dto, CancellationToken cancellationToken = default)
+    public async Task<CreateOrderResultDto> CreateAsync(
+        CreateOrderDto dto,
+        int? customerId = null,
+        string? clientIp = null,
+        CancellationToken cancellationToken = default)
     {
         if (dto.Items is null || dto.Items.Count == 0)
             throw new ArgumentException("Order must contain at least one item.");
+
+        var paymentMethod = ResolvePaymentMethod(dto.PaymentMethod);
 
         var productIds = dto.Items.Select(i => i.ProductId).Distinct().ToList();
         var products = new List<Product>();
@@ -58,7 +72,6 @@ public class OrderService(IUnitOfWork unitOfWork) : IOrderService
 
         var subtotal = orderItems.Sum(i => i.Price * i.Quantity);
 
-        // Áp dụng mã giảm giá nếu có
         decimal discountAmount = 0;
         string couponCode = string.Empty;
         Coupon? coupon = null;
@@ -89,19 +102,48 @@ public class OrderService(IUnitOfWork unitOfWork) : IOrderService
             DiscountAmount = discountAmount,
             TotalPrice = subtotal - discountAmount,
             Status = OrderStatus.Pending,
+            CustomerId = customerId,
+            PaymentMethod = paymentMethod,
+            PaymentStatus = PaymentStatuses.Unpaid,
             CreatedAt = DateTime.UtcNow,
             Items = orderItems,
         };
 
         unitOfWork.Orders.Add(order);
 
-        // Tăng usedCount của coupon
         if (coupon is not null)
             coupon.UsedCount++;
 
         await unitOfWork.SaveChangesAsync(cancellationToken);
 
-        return order.ToDto();
+        string? paymentUrl = null;
+        var emailSent = false;
+        if (_payments.OnlineEnabled && paymentMethod is not PaymentMethods.Cod)
+        {
+            paymentUrl = await paymentService.CreatePaymentUrlAsync(order, clientIp ?? "127.0.0.1", cancellationToken);
+            await unitOfWork.SaveChangesAsync(cancellationToken);
+        }
+        else
+        {
+            emailSent = await orderNotificationService.SendNewOrderNotificationAsync(order, cancellationToken);
+        }
+
+        return new CreateOrderResultDto(order.ToDto(), paymentUrl, emailSent);
+    }
+
+    public async Task<OrderPublicDto?> GetPublicAsync(int id, CancellationToken cancellationToken = default)
+    {
+        var order = await unitOfWork.Orders.GetByIdWithItemsAsync(id, cancellationToken);
+        return order is null
+            ? null
+            : new OrderPublicDto(
+                order.Id,
+                order.TotalPrice,
+                order.Status,
+                order.PaymentMethod,
+                order.PaymentStatus,
+                order.PointsEarned,
+                order.CreatedAt);
     }
 
     public async Task<OrderDto> UpdateStatusAsync(int id, UpdateOrderStatusDto dto, CancellationToken cancellationToken = default)
@@ -116,5 +158,29 @@ public class OrderService(IUnitOfWork unitOfWork) : IOrderService
         await unitOfWork.SaveChangesAsync(cancellationToken);
 
         return order.ToDto();
+    }
+
+    public async Task<IReadOnlyList<OrderDto>> GetMyOrdersAsync(int customerId, CancellationToken cancellationToken = default)
+    {
+        var orders = await unitOfWork.Orders.GetByCustomerAsync(customerId, cancellationToken);
+        return orders.Select(o => o.ToDto()).ToList();
+    }
+
+    private string ResolvePaymentMethod(string? requested)
+    {
+        if (!_payments.OnlineEnabled)
+            return PaymentMethods.Cod;
+
+        var paymentMethod = string.IsNullOrWhiteSpace(requested)
+            ? PaymentMethods.VnPay
+            : requested.ToUpperInvariant();
+
+        if (paymentMethod == PaymentMethods.Cod)
+            throw new ArgumentException("Vui lòng chọn thanh toán Momo hoặc VNPay để nhận hàng.");
+
+        if (!PaymentMethods.IsValid(paymentMethod) || paymentMethod == PaymentMethods.Cod)
+            throw new ArgumentException("Phương thức thanh toán không hợp lệ.");
+
+        return paymentMethod;
     }
 }

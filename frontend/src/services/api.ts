@@ -11,7 +11,34 @@ export interface CreateOrderPayload {
   customerAddress: string
   note?: string
   couponCode?: string
+  paymentMethod?: string
   items: CreateOrderItemPayload[]
+}
+
+export interface CustomerProfile {
+  id: number
+  fullName: string
+  email: string | null
+  phone: string | null
+  loyaltyPoints: number
+}
+
+export interface AuthResponse {
+  token: string
+  expiresAt: string
+  customer: CustomerProfile
+}
+
+export interface RegisterPayload {
+  fullName: string
+  email?: string
+  phone?: string
+  password: string
+}
+
+export interface LoginPayload {
+  identifier: string
+  password: string
 }
 
 export interface ValidateCouponResult {
@@ -37,19 +64,53 @@ export interface OrderItemResult {
   subTotal: number
 }
 
+export interface CreateOrderResponse {
+  order: OrderResult
+  paymentUrl: string | null
+  emailNotificationSent?: boolean
+}
+
+export interface OrderPublicResult {
+  id: number
+  totalPrice: number
+  status: string
+  paymentMethod: string
+  paymentStatus: string
+  pointsEarned: number
+  createdAt: string
+}
+
 export interface OrderResult {
   id: number
   customerName: string
   customerPhone: string
   customerAddress: string
   note: string
+  couponCode?: string
+  discountAmount?: number
   totalPrice: number
   status: string
+  paymentMethod: string
+  paymentStatus: string
+  pointsEarned: number
   createdAt: string
   items: OrderItemResult[]
 }
 
 const API_BASE = import.meta.env.VITE_API_URL ?? "/api"
+
+const TOKEN_KEY = "customer_token"
+
+export const tokenStore = {
+  get: () => localStorage.getItem(TOKEN_KEY),
+  set: (token: string) => localStorage.setItem(TOKEN_KEY, token),
+  clear: () => localStorage.removeItem(TOKEN_KEY),
+}
+
+function authHeaders(): Record<string, string> {
+  const token = tokenStore.get()
+  return token ? { Authorization: `Bearer ${token}` } : {}
+}
 
 async function fetchJson<T>(path: string): Promise<T> {
   const response = await fetch(`${API_BASE}${path}`)
@@ -57,6 +118,29 @@ async function fetchJson<T>(path: string): Promise<T> {
     throw new Error(`API error: ${response.status}`)
   }
   return response.json() as Promise<T>
+}
+
+async function postJson<T>(path: string, body: unknown, auth = false): Promise<T> {
+  const res = await fetch(`${API_BASE}${path}`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      ...(auth ? authHeaders() : {}),
+    },
+    body: JSON.stringify(body),
+  })
+  if (!res.ok) {
+    let message = `Lỗi ${res.status}`
+    try {
+      const data = await res.json()
+      message = data?.detail ?? data?.message ?? data?.title ?? message
+    } catch {
+      const text = await res.text().catch(() => "")
+      if (text) message = text
+    }
+    throw new Error(message)
+  }
+  return res.json() as Promise<T>
 }
 
 function buildQuery(params: Record<string, string | number | boolean | undefined>) {
@@ -109,15 +193,29 @@ export const api = {
     }),
 
   createOrder: (payload: CreateOrderPayload) =>
-    fetch(`${API_BASE}/orders`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(payload),
-    }).then(async (res) => {
-      if (!res.ok) {
-        const text = await res.text()
-        throw new Error(text || `Lỗi ${res.status}`)
-      }
-      return res.json() as Promise<OrderResult>
+    postJson<CreateOrderResponse>("/orders", payload, true),
+
+  getOrderPublic: (id: number) => fetchJson<OrderPublicResult>(`/orders/${id}/public`),
+
+  // Tài khoản khách hàng
+  register: (payload: RegisterPayload) =>
+    postJson<AuthResponse>("/customer/register", payload),
+
+  login: (payload: LoginPayload) =>
+    postJson<AuthResponse>("/customer/login", payload),
+
+  googleLogin: (idToken: string) =>
+    postJson<AuthResponse>("/customer/google", { idToken }),
+
+  getMe: () =>
+    fetch(`${API_BASE}/customer/me`, { headers: authHeaders() }).then(async (res) => {
+      if (!res.ok) throw new Error(`Lỗi ${res.status}`)
+      return res.json() as Promise<CustomerProfile>
+    }),
+
+  getMyOrders: () =>
+    fetch(`${API_BASE}/orders/my`, { headers: authHeaders() }).then(async (res) => {
+      if (!res.ok) throw new Error(`Lỗi ${res.status}`)
+      return res.json() as Promise<OrderResult[]>
     }),
 }

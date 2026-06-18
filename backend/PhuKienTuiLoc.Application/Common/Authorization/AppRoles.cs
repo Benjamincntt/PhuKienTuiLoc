@@ -5,6 +5,7 @@ public static class AppRoles
     public const string Admin = "Admin";
     public const string Accountant = "Accountant";
     public const string Employee = "Employee";
+    public const string Customer = "Customer";
 
     public const string AllStaff = $"{Admin},{Accountant},{Employee}";
     public const string ManageCategories = Admin;

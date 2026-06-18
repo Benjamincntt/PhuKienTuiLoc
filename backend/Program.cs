@@ -63,7 +63,24 @@ builder.Services.AddCors(options =>
     options.AddPolicy("Frontend", policy =>
     {
         policy
-            .WithOrigins("http://localhost:5173", "http://localhost:5174")
+            .SetIsOriginAllowed(origin =>
+            {
+                if (!Uri.TryCreate(origin, UriKind.Absolute, out var uri))
+                    return false;
+
+                if (uri.Scheme is not ("http" or "https"))
+                    return false;
+
+                if (uri.Host is "localhost" or "127.0.0.1")
+                    return uri.Port is 5173 or 5174;
+
+                // Dev: cho phép mọi IP LAN (192.168.x.x) — IP DHCP có thể đổi
+                if (builder.Environment.IsDevelopment() &&
+                    uri.Host.StartsWith("192.168.", StringComparison.Ordinal))
+                    return uri.Port is 5173 or 5174;
+
+                return uri.Host is "baobiantea.com" or "www.baobiantea.com";
+            })
             .AllowAnyHeader()
             .AllowAnyMethod();
     });

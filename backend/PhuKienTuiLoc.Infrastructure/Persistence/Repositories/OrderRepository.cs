@@ -37,5 +37,13 @@ public class OrderRepository(AppDbContext db) : IOrderRepository
             .Include(o => o.Items)
             .FirstOrDefaultAsync(o => o.Id == id, cancellationToken);
 
+    public async Task<IReadOnlyList<Order>> GetByCustomerAsync(int customerId, CancellationToken cancellationToken = default) =>
+        await db.Orders
+            .AsNoTracking()
+            .Include(o => o.Items)
+            .Where(o => o.CustomerId == customerId)
+            .OrderByDescending(o => o.CreatedAt)
+            .ToListAsync(cancellationToken);
+
     public void Add(Order order) => db.Orders.Add(order);
 }

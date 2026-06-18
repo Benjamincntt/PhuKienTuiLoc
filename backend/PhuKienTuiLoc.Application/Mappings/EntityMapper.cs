@@ -50,6 +50,9 @@ public static class EntityMapper
             order.DiscountAmount,
             order.TotalPrice,
             order.Status,
+            order.PaymentMethod,
+            order.PaymentStatus,
+            order.PointsEarned,
             order.CreatedAt,
             order.Items.Select(i => i.ToDto()).ToList()
         );

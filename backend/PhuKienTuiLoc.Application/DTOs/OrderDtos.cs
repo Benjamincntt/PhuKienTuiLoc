@@ -19,6 +19,9 @@ public record OrderDto(
     decimal DiscountAmount,
     decimal TotalPrice,
     string Status,
+    string PaymentMethod,
+    string PaymentStatus,
+    int PointsEarned,
     DateTime CreatedAt,
     IReadOnlyList<OrderItemDto> Items
 );
@@ -36,8 +39,22 @@ public class CreateOrderDto
     public string CustomerAddress { get; set; } = string.Empty;
     public string Note { get; set; } = string.Empty;
     public string CouponCode { get; set; } = string.Empty;
+    /// <summary>COD | VNPAY | MOMO. Mặc định COD.</summary>
+    public string PaymentMethod { get; set; } = "COD";
     public List<CreateOrderItemDto> Items { get; set; } = [];
 }
+
+/// <summary>Kết quả tạo đơn — kèm URL thanh toán nếu chọn cổng online.</summary>
+public record CreateOrderResultDto(OrderDto Order, string? PaymentUrl, bool EmailNotificationSent = false);
+
+public record OrderPublicDto(
+    int Id,
+    decimal TotalPrice,
+    string Status,
+    string PaymentMethod,
+    string PaymentStatus,
+    int PointsEarned,
+    DateTime CreatedAt);
 
 public class UpdateOrderStatusDto
 {

@@ -8,5 +8,6 @@ public interface IOrderRepository
     Task<PagedResult<Order>> GetPagedAsync(OrderQuery query, CancellationToken cancellationToken = default);
     Task<Order?> GetByIdWithItemsAsync(int id, CancellationToken cancellationToken = default);
     Task<Order?> GetByIdTrackedAsync(int id, CancellationToken cancellationToken = default);
+    Task<IReadOnlyList<Order>> GetByCustomerAsync(int customerId, CancellationToken cancellationToken = default);
     void Add(Order order);
 }
