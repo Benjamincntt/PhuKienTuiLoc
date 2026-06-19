@@ -34,7 +34,9 @@ build_admin() {
   npm install
   VITE_BASE_URL=/admin-panel/ npm run build
   mkdir -p "$ADMIN_OUT"
+  rm -rf "$ADMIN_OUT"/*
   cp -r dist/. "$ADMIN_OUT/"
+  ln -sfn "$ADMIN_OUT" /var/www/publish/admin-panel
   echo "==> Admin xong"
 }
 
