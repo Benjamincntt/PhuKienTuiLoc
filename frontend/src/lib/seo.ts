@@ -9,8 +9,15 @@ export const DEFAULT_DESCRIPTION =
 
 export const DEFAULT_OG_IMAGE = `${SITE_URL}/og-image.jpg`
 
-/** Logo thương hiệu dùng cho JSON-LD / Google Knowledge Panel. */
-export const SITE_LOGO = `${SITE_URL}/logo-antea.png`
+/** Logo vuông cho Google JSON-LD (>=112px, nền đặc). */
+export const SITE_LOGO = `${SITE_URL}/logo-square.png`
+
+export const SITE_LOGO_JSON_LD = {
+  "@type": "ImageObject" as const,
+  url: SITE_LOGO,
+  width: 512,
+  height: 512,
+}
 
 /** Trả về URL tuyệt đối từ path tương đối hoặc giữ nguyên nếu đã là URL đầy đủ. */
 export function absoluteUrl(pathOrUrl = ""): string {

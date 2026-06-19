@@ -6,7 +6,7 @@ import { NewsSection } from "@/components/home/NewsSection"
 import { SaleCountdown } from "@/components/home/SaleCountdown"
 import { ProductCard } from "@/components/products/ProductCard"
 import { Seo } from "@/components/seo/Seo"
-import { SITE_LOGO, SITE_NAME, SITE_URL } from "@/lib/seo"
+import { SITE_LOGO_JSON_LD, SITE_NAME, SITE_URL } from "@/lib/seo"
 import { api } from "@/services/api"
 import type { Category, Coupon, NewsArticle, Product } from "@/types"
 
@@ -16,7 +16,7 @@ const homeJsonLd = [
     "@type": "Organization",
     name: SITE_NAME,
     url: SITE_URL,
-    logo: SITE_LOGO,
+    logo: SITE_LOGO_JSON_LD,
   },
   {
     "@context": "https://schema.org",
