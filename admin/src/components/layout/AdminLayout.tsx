@@ -34,7 +34,11 @@ function SidebarContent({
   return (
     <>
       <div className="border-b border-white/10 p-5">
-        <p className="font-bold text-primary">AnTea</p>
+        <img
+          src={`${import.meta.env.BASE_URL}logo-antea.png`}
+          alt="AnTea"
+          className="mb-2 h-9 w-auto object-contain"
+        />
         <p className="text-xs text-muted-foreground">Tổng Kho Túi Lọc - Bao Bì Trà</p>
       </div>
       <nav className="flex-1 space-y-1 overflow-y-auto p-4">

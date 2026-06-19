@@ -36,8 +36,13 @@ export function LoginPage() {
     >
       <Card className="w-full max-w-md border-white/20 bg-white/95 shadow-2xl backdrop-blur-md">
         <CardHeader className="text-center">
+          <img
+            src={`${import.meta.env.BASE_URL}logo-antea.png`}
+            alt="AnTea"
+            className="mx-auto mb-3 h-10 w-auto object-contain"
+          />
           <CardTitle className="text-2xl">Đăng nhập quản trị</CardTitle>
-          <p className="text-sm text-muted-foreground">AnTea Tổng Kho Túi Lọc - Bao Bì Trà — Admin Panel</p>
+          <p className="text-sm text-muted-foreground">Tổng Kho Túi Lọc - Bao Bì Trà — Admin Panel</p>
         </CardHeader>
         <CardContent>
           <form onSubmit={handleSubmit} className="space-y-4">
