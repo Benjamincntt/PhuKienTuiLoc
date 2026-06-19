@@ -4,7 +4,7 @@
 
 | Mục | Giá trị |
 |-----|---------|
-| Host | `192.168.200.172` (LAN) hoặc IP public |
+| Host | `YOUR_SERVER_IP` (LAN hoặc IP public) |
 | User | `root` |
 | Domain | `baobiantea.com` (trỏ DNS về IP public) |
 
@@ -17,7 +17,7 @@
 Từ máy trong cùng mạng LAN (hoặc VPN tới Gdata):
 
 ```bash
-ssh root@192.168.200.172
+ssh root@YOUR_SERVER_IP
 ```
 
 ---
@@ -39,7 +39,7 @@ bash scripts/gdata-server-setup.sh
 Nếu test bằng IP LAN trước khi có domain:
 
 ```bash
-DOMAIN=192.168.200.172 bash scripts/gdata-server-setup.sh
+DOMAIN=YOUR_SERVER_IP bash scripts/gdata-server-setup.sh
 ```
 
 ---
