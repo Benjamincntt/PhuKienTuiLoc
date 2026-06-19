@@ -1,10 +1,12 @@
 import { ArrowRight, Timer } from "lucide-react"
 import { Link } from "react-router-dom"
 import { Button } from "@/components/ui/button"
+import { FloatingParticles } from "@/components/effects/FloatingParticles"
 
 export function HeroBanner() {
   return (
     <section className="relative overflow-hidden rounded-2xl bg-gradient-to-r from-primary via-accent to-primary p-6 text-primary-foreground shadow-lg md:p-10">
+      <FloatingParticles />
       <div className="relative z-10 max-w-xl space-y-4">
         <p className="inline-flex items-center gap-2 rounded-full bg-black/10 px-3 py-1 text-xs font-medium">
           <Timer className="h-4 w-4" />
@@ -23,8 +25,8 @@ export function HeroBanner() {
           </Link>
         </Button>
       </div>
-      <div className="pointer-events-none absolute -right-8 -top-8 h-40 w-40 rounded-full bg-white/20 blur-2xl" />
-      <div className="pointer-events-none absolute -bottom-10 right-20 h-32 w-32 rounded-full bg-white/10 blur-xl" />
+      <div className="pointer-events-none absolute -right-8 -top-8 z-[1] h-40 w-40 rounded-full bg-white/20 blur-2xl" />
+      <div className="pointer-events-none absolute -bottom-10 right-20 z-[1] h-32 w-32 rounded-full bg-white/10 blur-xl" />
     </section>
   )
 }

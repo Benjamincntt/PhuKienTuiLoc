@@ -1,12 +1,13 @@
 import { Link } from "react-router-dom"
 import { Separator } from "@/components/ui/separator"
+import { AppLogo } from "@/components/brand/AppLogo"
 
 export function Footer() {
   return (
-    <footer className="mt-16 border-t border-border bg-secondary/40">
+    <footer id="footer" className="mt-16 border-t border-border bg-secondary/40">
       <div className="mx-auto grid max-w-7xl gap-8 px-4 py-10 sm:grid-cols-2 sm:py-12 lg:grid-cols-4">
         <div>
-          <Link to="/" className="mb-3 block font-bold text-primary">AnTea Tổng Kho Túi Lọc - Bao Bì Trà</Link>
+          <AppLogo size="lg" compactText={false} asLink={false} className="mb-4" />
           <p className="text-sm text-muted-foreground">
             Chuyên cung cấp túi lọc vải không dệt, giấy, sợi ngô, cotton và phụ kiện pha trà, cà phê.
           </p>

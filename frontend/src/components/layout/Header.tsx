@@ -15,6 +15,7 @@ import {
 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
+import { AppLogo } from "@/components/brand/AppLogo"
 import { useCart } from "@/contexts/CartContext"
 import { useAuth } from "@/contexts/AuthContext"
 import { cn } from "@/lib/utils"
@@ -64,15 +65,7 @@ export function Header() {
 
       <div className="mx-auto max-w-7xl px-4">
         <div className="flex items-center gap-2 py-3 sm:gap-4 sm:py-4">
-          <Link to="/" className="flex shrink-0 items-center gap-2">
-            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-primary text-base font-bold text-primary-foreground shadow sm:h-11 sm:w-11 sm:text-lg">
-              AT
-            </div>
-            <div className="hidden min-w-0 sm:block">
-              <p className="truncate text-sm font-bold leading-normal">AnTea</p>
-              <p className="hidden text-xs text-muted-foreground sm:block">Tổng Kho Túi Lọc - Bao Bì Trà</p>
-            </div>
-          </Link>
+          <AppLogo size="md" />
 
           <form onSubmit={handleSearch} className="relative hidden min-w-0 flex-1 md:block">
             <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
