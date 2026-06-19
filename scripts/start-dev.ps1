@@ -31,7 +31,7 @@ $lanIp = (Get-NetIPAddress -AddressFamily IPv4 |
 Write-Host "`nDa mo 3 cua so PowerShell." -ForegroundColor Green
 Write-Host "  Backend:  http://localhost:5280/swagger"
 Write-Host "  Cua hang: http://localhost:5173"
-Write-Host "  Admin:    http://localhost:5174  (admin / Admin@123)"
+Write-Host "  Admin:    http://localhost:5174  (user/pass trong appsettings.Development.json)"
 if ($lanIp) {
     Write-Host "`n  Mobile (cung WiFi): http://${lanIp}:5173" -ForegroundColor Cyan
 }

@@ -3,16 +3,16 @@
     "DefaultConnection": "Server=localhost;Database=PhuKienTuiLocDb;User Id=YOUR_SQL_USER;Password=YOUR_SQL_PASSWORD;TrustServerCertificate=True;MultipleActiveResultSets=true"
   },
   "Jwt": {
-    "Key": "PhuKienTuiLoc_Dev_Secret_Key_Min32Chars!",
+    "Key": "YOUR_DEV_JWT_SECRET_KEY_MIN_32_CHARS",
     "Issuer": "PhuKienTuiLoc",
     "Audience": "PhuKienTuiLoc.Admin",
     "ExpiresHours": 8
   },
   "Admin": {
     "Users": [
-      { "Username": "admin", "Password": "Admin@123", "Role": "Admin" },
-      { "Username": "ketoan", "Password": "Ketoan@123", "Role": "Accountant" },
-      { "Username": "nhanvien", "Password": "Nhanvien@123", "Role": "Employee" }
+      { "Username": "admin", "Password": "YOUR_ADMIN_PASSWORD", "Role": "Admin" },
+      { "Username": "ketoan", "Password": "YOUR_ACCOUNTANT_PASSWORD", "Role": "Accountant" },
+      { "Username": "nhanvien", "Password": "YOUR_EMPLOYEE_PASSWORD", "Role": "Employee" }
     ]
   },
   "Upload": {

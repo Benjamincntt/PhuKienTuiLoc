@@ -116,15 +116,20 @@ cd admin && npm install && npm run dev
 
 ### Đăng nhập admin
 
+Copy file mẫu rồi **đặt mật khẩu local** (không commit):
 
+```bash
+cp backend/appsettings.Development.json.example backend/appsettings.Development.json
+# Sửa Admin:Users và Jwt:Key trong appsettings.Development.json
+```
 
-Tài khoản mặc định (seed khi backend khởi động):
+| Username | Vai trò |
+|----------|---------|
+| `admin` | Quản trị viên — toàn quyền |
+| `ketoan` | Kế toán — quản lý mã giảm giá, xem sản phẩm |
+| `nhanvien` | Nhân viên — quản lý sản phẩm, tin tức, upload ảnh |
 
-| Username | Password | Vai trò |
-|----------|----------|---------|
-| `admin` | `Admin@123` | Quản trị viên — toàn quyền |
-| `ketoan` | `Ketoan@123` | Kế toán — quản lý mã giảm giá, xem sản phẩm |
-| `nhanvien` | `Nhanvien@123` | Nhân viên — quản lý sản phẩm, tin tức, upload ảnh |
+Mật khẩu nằm trong `backend/appsettings.Development.json` (file gitignore).
 
 
 
