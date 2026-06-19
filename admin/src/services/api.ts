@@ -10,6 +10,7 @@ import type {
 
 const API_BASE = import.meta.env.VITE_API_URL ?? "/api"
 const TOKEN_KEY = "admin_token"
+const ADMIN_LOGIN_PATH = `${(import.meta.env.BASE_URL ?? "/").replace(/\/?$/, "/")}login`
 
 export function getToken() {
   return localStorage.getItem(TOKEN_KEY)
@@ -23,6 +24,10 @@ export function clearToken() {
   localStorage.removeItem(TOKEN_KEY)
 }
 
+function redirectToLoginIfNeeded(hadToken: boolean) {
+  if (hadToken) window.location.href = ADMIN_LOGIN_PATH
+}
+
 async function request<T>(path: string, options: RequestInit = {}): Promise<T> {
   const headers = new Headers(options.headers)
   headers.set("Content-Type", "application/json")
@@ -31,8 +36,9 @@ async function request<T>(path: string, options: RequestInit = {}): Promise<T> {
 
   const response = await fetch(`${API_BASE}${path}`, { ...options, headers })
   if (response.status === 401) {
+    const hadToken = Boolean(token)
     clearToken()
-    window.location.href = "/login"
+    redirectToLoginIfNeeded(hadToken)
     throw new Error("Unauthorized")
   }
   if (!response.ok) {
@@ -107,8 +113,9 @@ export const api = {
       body: formData,
     })
     if (response.status === 401) {
+      const hadToken = Boolean(token)
       clearToken()
-      window.location.href = "/login"
+      redirectToLoginIfNeeded(hadToken)
       throw new Error("Unauthorized")
     }
     if (!response.ok) {
