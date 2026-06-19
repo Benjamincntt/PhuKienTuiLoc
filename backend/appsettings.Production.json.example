@@ -1,0 +1,61 @@
+{
+  "ConnectionStrings": {
+    "DefaultConnection": "Server=localhost;Database=PhuKienTuiLocDb;User Id=YOUR_SQL_USER;Password=YOUR_SQL_PASSWORD;TrustServerCertificate=True;MultipleActiveResultSets=true"
+  },
+  "Jwt": {
+    "Key": "CHANGE_ME_32_CHARS_MINIMUM_PRODUCTION_KEY!",
+    "Issuer": "PhuKienTuiLoc",
+    "Audience": "PhuKienTuiLoc.Admin",
+    "ExpiresHours": 8
+  },
+  "Admin": {
+    "Users": [
+      { "Username": "admin", "Password": "CHANGE_ADMIN_PASSWORD", "Role": "Admin" }
+    ]
+  },
+  "Upload": {
+    "ImagesPath": "uploads/images",
+    "MaxFileSizeBytes": 5242880,
+    "AllowedExtensions": [ ".jpg", ".jpeg", ".png", ".webp", ".gif" ]
+  },
+  "Site": {
+    "FrontendUrl": "https://baobiantea.com",
+    "BackendUrl": "https://baobiantea.com"
+  },
+  "Google": {
+    "ClientId": ""
+  },
+  "VnPay": {
+    "TmnCode": "",
+    "HashSecret": "",
+    "PaymentUrl": "https://sandbox.vnpayment.vn/paymentv2/vpcpay.html"
+  },
+  "Momo": {
+    "PartnerCode": "",
+    "AccessKey": "",
+    "SecretKey": "",
+    "Endpoint": "https://test-payment.momo.vn/v2/gateway/api/create"
+  },
+  "Payments": {
+    "OnlineEnabled": false
+  },
+  "OrderNotification": {
+    "Enabled": true,
+    "RecipientEmail": "benjamin.cntt@gmail.com"
+  },
+  "Smtp": {
+    "Host": "smtp.gmail.com",
+    "Port": 587,
+    "UseStartTls": true,
+    "Username": "benjamin.cntt@gmail.com",
+    "Password": "YOUR_GMAIL_APP_PASSWORD",
+    "FromEmail": "benjamin.cntt@gmail.com",
+    "FromName": "AnTea - Don hang"
+  },
+  "Logging": {
+    "LogLevel": {
+      "Default": "Information",
+      "Microsoft.AspNetCore": "Warning"
+    }
+  }
+}

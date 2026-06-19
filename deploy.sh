@@ -6,7 +6,7 @@
 #   bash deploy.sh fe        -> chỉ build frontend (cửa hàng)
 #   bash deploy.sh admin     -> chỉ build admin
 #   bash deploy.sh be        -> chỉ publish + restart backend
-#   bash deploy.sh           -> làm tất cả (frontend + admin)
+#   bash deploy.sh all        -> frontend + admin + backend
 
 set -e
 
@@ -50,7 +50,7 @@ case "$TARGET" in
   fe|frontend) build_frontend ;;
   admin)       build_admin ;;
   be|backend)  build_backend ;;
-  all)         build_frontend; build_admin ;;
+  all)         build_frontend; build_admin; build_backend ;;
   *) echo "Tham so khong hop le: $TARGET (dung: fe | admin | be | all)"; exit 1 ;;
 esac
 
